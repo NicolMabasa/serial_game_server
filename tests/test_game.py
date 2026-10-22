@@ -61,3 +61,22 @@ def test_move_before_new(link):
     link.send("CONNECT")
     assert link.send("MOVE:0") == "NACK:NOGAME"
     assert link.send("STATE") == "NACK:NOGAME"
+    
+def test_oversized_message(real_link):
+    real_link.send("CONNECT")
+    real_link.send("NEW")
+    assert real_link.send("A" * 100) == "NACK:BADCMD"
+    assert real_link.send("STATE") == "BOARD:........."    
+    
+def test_garbage_text(real_link):
+    real_link.send("CONNECT")
+    real_link.send("NEW")
+    assert real_link.send("\x01\x02\x03") == "NACK:BADCMD"
+    assert real_link.send("STATE") == "BOARD:........."
+
+
+def test_lowercase_command(link):
+    link.send("CONNECT")
+    link.send("NEW")
+    assert link.send("move:4") == "NACK:BADCMD"
+    assert link.send("STATE") == "BOARD:........."
