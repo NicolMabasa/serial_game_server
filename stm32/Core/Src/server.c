@@ -8,6 +8,7 @@
 #include "framer.h"
 #include "protocol.h"
 #include "game.h"
+#include "hw.h"
 
 #define TX_TIMEOUT_MS 100u
 
@@ -18,6 +19,7 @@ void server_init(UART_HandleTypeDef *huart)
     uart = huart;
     game_init();
     framer_init();
+    hw_init();
 
     /* clear any stale error flags, then turn the receive interrupt on */
     USART1->ICR = USART_ICR_ORECF | USART_ICR_FECF | USART_ICR_NCF;
@@ -45,6 +47,7 @@ int server_uart_isr(void)
 
 void server_poll(void)
 {
+    hw_poll();
     framer_check_timeout(HAL_GetTick());
 
     Frame f;
