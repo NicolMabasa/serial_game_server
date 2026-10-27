@@ -6,7 +6,12 @@ from gui.link import FakeLink, SerialLink
 @pytest.fixture
 def link():
     port = os.environ.get("SERIAL_PORT")
-    lk = SerialLink(port) if port else FakeLink()
+    if port:
+        lk = SerialLink(port)
+        lk.ser.reset_input_buffer()
+        lk.send("RESIGN")
+    else:
+        lk = FakeLink()
     yield lk
     lk.close()          # always release the COM port, even when a test fails
 

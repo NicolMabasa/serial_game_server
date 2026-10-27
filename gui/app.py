@@ -68,9 +68,19 @@ def on_new():
     else:
         status.config(text="Error: " + reply)
 
+def on_resign():
+    reply = link.send("RESIGN")
+    if reply == "OK:GAMEOVER":
+        status.config(text="You resigned. Game over")
+        draw_board(link.send("STATE")[6:])
+        set_cells(False)
+    else:
+        status.config(text="Rejected: " + reply)
+
 tk.Button(root, text="Connect", command=on_connect).grid(row=4, column=0)
 tk.Button(root, text="New Game", command=on_new).grid(row=4, column=1)
 tk.Button(root, text="Disconnect", command=on_disconnect).grid(row=4, column=2)
+tk.Button(root, text="Resign", command=on_resign).grid(row=5, column=1)
 
 def on_close():
     link.send("DISCONNECT")

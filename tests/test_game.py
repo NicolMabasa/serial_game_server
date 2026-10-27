@@ -80,3 +80,9 @@ def test_lowercase_command(link):
     link.send("NEW")
     assert link.send("move:4") == "NACK:BADCMD"
     assert link.send("STATE") == "BOARD:........."
+    
+def test_resign(link):
+    link.send("CONNECT")
+    link.send("NEW")
+    assert link.send("RESIGN") == "OK:GAMEOVER"
+    assert link.send("MOVE:0") == "NACK:NOGAME"
