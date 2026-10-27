@@ -6,9 +6,9 @@ from gui.link import FakeLink, SerialLink
 @pytest.fixture
 def link():
     port = os.environ.get("SERIAL_PORT")
-    if port:
-        return SerialLink(port)
-    return FakeLink()
+    lk = SerialLink(port) if port else FakeLink()
+    yield lk
+    lk.close()          # always release the COM port, even when a test fails
 
 
 @pytest.fixture

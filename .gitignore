@@ -1,3 +1,7 @@
 __pycache__/
 .pytest_cache/
 .venv/
+stm32/Debug/
+stm32/Release/
+host_tests/test_server
+host_tests/test_server.exe
